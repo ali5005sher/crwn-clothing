@@ -3,10 +3,15 @@ import { Fragment, useContext } from "react";
 import { ReactComponent as CrwnLogo } from "../../assests/87 - crown.svg";
 import "../navigation/navigation.style.scss";
 import { UserContext } from "../../contexts/user.context";
+import { signOutUser } from "../../utils/firebase/firebase.utils";
 
 const Navigation = () => {
-  const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+
+  const signOutHandler = async () => {
+    await signOutUser();
+    setCurrentUser(null);
+  };
 
   return (
     <Fragment>
@@ -18,9 +23,15 @@ const Navigation = () => {
           <Link className="nav-link" to="/shop">
             Shop
           </Link>
-          <Link className="nav-link" to="/auth">
-            sign-in
-          </Link>
+          {currentUser ? (
+            <Link className="nav-link" onClick={signOutHandler}>
+              Sign-out
+            </Link>
+          ) : (
+            <Link className="nav-link" to="/auth">
+              sign-in
+            </Link>
+          )}
         </div>
       </div>
       <Outlet />
